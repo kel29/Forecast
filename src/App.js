@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './App.css';
 import MenuNav from './components/MenuNav'
-import { Container, Segment } from 'semantic-ui-react'
+import SearchAlert from './components/SearchAlert'
+import { Container } from 'semantic-ui-react'
 import Geocode from 'react-geocode'
+import Forecast from './components/Forecast';
 
 function App() {
   const [location, setLocation] = useState('')
@@ -12,14 +14,16 @@ function App() {
   const [tempUnit, setTempUnit] = useState('Fahrenheit')
   const [weatherSource, setWeatherSource] = useState(`http://forecast.io/embed/#lat=${lat}&lon=${lng}&units=${units}`)
   const [forecastFor, setForecastFor] = useState('Seven day weather forecast')
+  const [searchError, setSearchError] = useState(false)
 
   const getCoordinates = () => {
     return Geocode.fromAddress(location, process.env.REACT_APP_GOOGLE)
     .then(resp => {
       setLat(resp.results[0].geometry.location.lat)
       setLng(resp.results[0].geometry.location.lng)
-    },
-    error => console.log(error))
+      setSearchError(false)
+    })
+    .catch(error => setSearchError(true))
   }
 
   const getForecast = () => {
@@ -52,21 +56,7 @@ function App() {
         handleChangeUnits={changeUnits}
       />
       <Container>
-        <Segment.Group raised>
-          <Segment inverted>
-            <h2>{forecastFor}</h2>
-          </Segment>
-          <Segment>
-            <iframe
-              id="forecast_embed"
-              title='Weekly weather forecast'
-              frameBorder="0"
-              height="275"
-              width="100%"
-              src={weatherSource}
-            />
-          </Segment>
-        </Segment.Group>
+        {searchError ? <SearchAlert /> : <Forecast forecastFor={forecastFor} weatherSource={weatherSource} />}
       </Container>
     </>
   )
