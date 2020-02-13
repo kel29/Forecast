@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import MenuNav from './components/MenuNav'
 import SearchAlert from './components/SearchAlert'
-import { Container } from 'semantic-ui-react'
+import { Container, Segment } from 'semantic-ui-react'
+import { Helmet } from 'react-helmet'
 import Geocode from 'react-geocode'
 import Forecast from './components/Forecast';
 
@@ -12,8 +13,7 @@ function App() {
   const [lng, setLng] = useState(-122.3321)
   const [units, setUnits] = useState('us')
   const [tempUnit, setTempUnit] = useState('Fahrenheit')
-  const [weatherSource, setWeatherSource] = useState(`http://forecast.io/embed/#lat=${lat}&lon=${lng}&name=${location}&units=${units}`)
-  const [forecastFor, setForecastFor] = useState('Seven day weather forecast for Seattle')
+  const [weatherSource, setWeatherSource] = useState(`https://forecast.io/embed/#lat=${lat}&lon=${lng}&name=${location}&units=${units}`)
   const [searchError, setSearchError] = useState(false)
 
   useEffect(() => {
@@ -38,17 +38,15 @@ function App() {
       setLng(lng)
       Geocode.fromLatLng(lat, lng, process.env.REACT_APP_GOOGLE).then(resp => {
         setLocation(resp.results[0].formatted_address)
-        setForecastFor(`Seven day weather forecast for ${resp.results[0].formatted_address}`)
       })
-      .then(() => setWeatherSource(`http://forecast.io/embed/#lat=${lat}&lon=${lng}&name=${location}&units=${units}`))
+      .then(() => setWeatherSource(`https://forecast.io/embed/#lat=${lat}&lon=${lng}&name=${location}&units=${units}`))
     })
   }
 
   const getForecast = () => {
     getCoordinates()
     .then(() => {
-      setWeatherSource(`http://forecast.io/embed/#lat=${lat}&lon=${lng}&name=${location}&units=${units}`)
-      setForecastFor(`Seven day weather forecast for ${location}`)
+      setWeatherSource(`https://forecast.io/embed/#lat=${lat}&lon=${lng}&name=${location}&units=${units}`)
     })
   }
 
@@ -56,11 +54,11 @@ function App() {
     if (tempUnit !== 'Celcius') {
       setUnits('uk')
       setTempUnit('Celcius')
-      setWeatherSource(`http://forecast.io/embed/#lat=${lat}&lon=${lng}&name=${location}&units=uk`)
+      setWeatherSource(`https://forecast.io/embed/#lat=${lat}&lon=${lng}&name=${location}&units=uk`)
     } else {
       setUnits('us')
       setTempUnit('Fahrenheit')
-      setWeatherSource(`http://forecast.io/embed/#lat=${lat}&lon=${lng}&name=${location}&units=us`)
+      setWeatherSource(`https://forecast.io/embed/#lat=${lat}&lon=${lng}&name=${location}&units=us`)
     }
   }
 
@@ -74,7 +72,7 @@ function App() {
         handleChangeUnits={changeUnits}
       />
       <Container>
-        {searchError ? <SearchAlert /> : <Forecast forecastFor={forecastFor} weatherSource={weatherSource} />}
+        {searchError ? <SearchAlert /> : <Forecast weatherSource={weatherSource} />}
       </Container>
     </>
   )

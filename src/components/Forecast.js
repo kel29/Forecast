@@ -5,7 +5,7 @@ const Forecast = (props) => {
   return (
     <Segment.Group raised>
       <Segment inverted>
-        <h2>{props.forecastFor}</h2>
+        <h2>Seven Day Weather Forecast</h2>
       </Segment>
       <Segment>
         <iframe
