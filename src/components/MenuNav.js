@@ -1,5 +1,5 @@
 import React from 'react'
-import { Menu } from 'semantic-ui-react'
+import { Menu, Checkbox } from 'semantic-ui-react'
 
 const MenuNav = (props) => {
   return (
@@ -7,17 +7,13 @@ const MenuNav = (props) => {
       <Menu.Item>
         <h1>Forecast</h1>
       </Menu.Item>
-      <div className='right item'> 
-        <div className='ui slider checkbox'>
-          <input
-            type='checkbox'
-            name='public'
-            onChange={() => props.handleChangeUnits()}
-          />
-          <label>{props.tempUnit}</label>
-        </div>
-      </div>
-      <div className='right item'>
+      <Menu.Item position='right'>
+        <Checkbox slider
+          label={props.tempUnit}
+          onChange={() => props.handleChangeUnits()}
+        />
+      </Menu.Item>
+      <Menu.Item position='right'>
         <div className='ui category search item'>
           <div className='ui transparent icon input'>
             <input
@@ -33,7 +29,7 @@ const MenuNav = (props) => {
             />
           </div>
         </div>
-      </div>
+      </Menu.Item>
     </Menu>
   )
 }
